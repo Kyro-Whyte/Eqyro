@@ -37,6 +37,14 @@ import { PerformanceList } from "./performance/PerformanceList";
 import { PerformanceCreate } from "./performance/PerformanceCreate";
 import { PerformanceEdit } from "./performance/PerformanceEdit";
 import { PerformanceShow } from "./performance/PerformanceShow";
+import { WithdrawalList } from "./withdrawal/WithdrawalList";
+import { WithdrawalCreate } from "./withdrawal/WithdrawalCreate";
+import { WithdrawalEdit } from "./withdrawal/WithdrawalEdit";
+import { WithdrawalShow } from "./withdrawal/WithdrawalShow";
+import { DepositList } from "./deposit/DepositList";
+import { DepositCreate } from "./deposit/DepositCreate";
+import { DepositEdit } from "./deposit/DepositEdit";
+import { DepositShow } from "./deposit/DepositShow";
 import { jwtAuthProvider } from "./auth-provider/ra-auth-jwt";
 
 const App = (): React.ReactElement => {
@@ -118,6 +126,20 @@ const App = (): React.ReactElement => {
           edit={PerformanceEdit}
           create={PerformanceCreate}
           show={PerformanceShow}
+        />
+        <Resource
+          name="Withdrawal"
+          list={WithdrawalList}
+          edit={WithdrawalEdit}
+          create={WithdrawalCreate}
+          show={WithdrawalShow}
+        />
+        <Resource
+          name="Deposit"
+          list={DepositList}
+          edit={DepositEdit}
+          create={DepositCreate}
+          show={DepositShow}
         />
       </Admin>
     </div>

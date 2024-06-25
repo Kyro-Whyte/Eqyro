@@ -11,8 +11,8 @@ import {
   ReferenceField,
 } from "react-admin";
 
-import { INVESTMENTOPTION_TITLE_FIELD } from "../investmentOption/InvestmentOptionTitle";
 import { USER_TITLE_FIELD } from "./UserTitle";
+import { INVESTMENTOPTION_TITLE_FIELD } from "../investmentOption/InvestmentOptionTitle";
 
 export const UserShow = (props: ShowProps): React.ReactElement => {
   return (
@@ -31,6 +31,22 @@ export const UserShow = (props: ShowProps): React.ReactElement => {
         <DateField source="updatedAt" label="Updated At" />
         <TextField label="Username" source="username" />
         <TextField label="usernameUser" source="usernameUser" />
+        <ReferenceManyField
+          reference="Deposit"
+          target="userId"
+          label="Deposits"
+        >
+          <Datagrid rowClick="show">
+            <TextField label="amount" source="amount" />
+            <DateField source="createdAt" label="Created At" />
+            <TextField label="date" source="date" />
+            <TextField label="ID" source="id" />
+            <DateField source="updatedAt" label="Updated At" />
+            <ReferenceField label="user" source="user.id" reference="User">
+              <TextField source={USER_TITLE_FIELD} />
+            </ReferenceField>
+          </Datagrid>
+        </ReferenceManyField>
         <ReferenceManyField
           reference="Payment"
           target="userId"
@@ -63,6 +79,22 @@ export const UserShow = (props: ShowProps): React.ReactElement => {
             <TextField label="ID" source="id" />
             <TextField label="referralDate" source="referralDate" />
             <TextField label="referredUserId" source="referredUserId" />
+            <DateField source="updatedAt" label="Updated At" />
+            <ReferenceField label="user" source="user.id" reference="User">
+              <TextField source={USER_TITLE_FIELD} />
+            </ReferenceField>
+          </Datagrid>
+        </ReferenceManyField>
+        <ReferenceManyField
+          reference="Withdrawal"
+          target="userId"
+          label="Withdrawals"
+        >
+          <Datagrid rowClick="show">
+            <TextField label="amount" source="amount" />
+            <DateField source="createdAt" label="Created At" />
+            <TextField label="date" source="date" />
+            <TextField label="ID" source="id" />
             <DateField source="updatedAt" label="Updated At" />
             <ReferenceField label="user" source="user.id" reference="User">
               <TextField source={USER_TITLE_FIELD} />

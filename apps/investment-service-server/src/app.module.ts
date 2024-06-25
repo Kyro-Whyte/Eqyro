@@ -21,6 +21,8 @@ import { UserModule } from "./user/user.module";
 import { TransactionHistoryModule } from "./transactionHistory/transactionHistory.module";
 import { NotificationModule } from "./notification/notification.module";
 import { PerformanceModule } from "./performance/performance.module";
+import { WithdrawalModule } from "./withdrawal/withdrawal.module";
+import { DepositModule } from "./deposit/deposit.module";
 import { HealthModule } from "./health/health.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { SecretsManagerModule } from "./providers/secrets/secretsManager.module";
@@ -51,6 +53,8 @@ import { AuthModule } from "./auth/auth.module";
     TransactionHistoryModule,
     NotificationModule,
     PerformanceModule,
+    WithdrawalModule,
+    DepositModule,
     HealthModule,
     PrismaModule,
     SecretsManagerModule,

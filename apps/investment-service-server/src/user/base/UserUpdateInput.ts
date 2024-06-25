@@ -11,21 +11,35 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
+import { DepositUpdateManyWithoutUsersInput } from "./DepositUpdateManyWithoutUsersInput";
 import {
-  IsString,
-  IsOptional,
-  MaxLength,
   ValidateNested,
+  IsOptional,
+  IsString,
+  MaxLength,
 } from "class-validator";
-import { PaymentUpdateManyWithoutUsersInput } from "./PaymentUpdateManyWithoutUsersInput";
 import { Type } from "class-transformer";
+import { PaymentUpdateManyWithoutUsersInput } from "./PaymentUpdateManyWithoutUsersInput";
 import { ReferralUpdateManyWithoutUsersInput } from "./ReferralUpdateManyWithoutUsersInput";
 import { IsJSONValue } from "../../validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
+import { WithdrawalUpdateManyWithoutUsersInput } from "./WithdrawalUpdateManyWithoutUsersInput";
 
 @InputType()
 class UserUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: () => DepositUpdateManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => DepositUpdateManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => DepositUpdateManyWithoutUsersInput, {
+    nullable: true,
+  })
+  deposits?: DepositUpdateManyWithoutUsersInput;
+
   @ApiProperty({
     required: false,
     type: String,
@@ -175,6 +189,18 @@ class UserUpdateInput {
     nullable: true,
   })
   usernameUser?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => WithdrawalUpdateManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => WithdrawalUpdateManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => WithdrawalUpdateManyWithoutUsersInput, {
+    nullable: true,
+  })
+  withdrawals?: WithdrawalUpdateManyWithoutUsersInput;
 }
 
 export { UserUpdateInput as UserUpdateInput };

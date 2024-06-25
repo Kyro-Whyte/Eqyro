@@ -14,8 +14,10 @@ import { PrismaService } from "../../prisma/prisma.service";
 import {
   Prisma,
   User as PrismaUser,
+  Deposit as PrismaDeposit,
   Payment as PrismaPayment,
   Referral as PrismaReferral,
+  Withdrawal as PrismaWithdrawal,
 } from "@prisma/client";
 
 import { PasswordService } from "../../auth/password.service";
@@ -68,6 +70,17 @@ export class UserServiceBase {
     return this.prisma.user.delete(args);
   }
 
+  async findDeposits(
+    parentId: string,
+    args: Prisma.DepositFindManyArgs
+  ): Promise<PrismaDeposit[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .deposits(args);
+  }
+
   async findPayments(
     parentId: string,
     args: Prisma.PaymentFindManyArgs
@@ -88,5 +101,16 @@ export class UserServiceBase {
         where: { id: parentId },
       })
       .referrals(args);
+  }
+
+  async findWithdrawals(
+    parentId: string,
+    args: Prisma.WithdrawalFindManyArgs
+  ): Promise<PrismaWithdrawal[]> {
+    return this.prisma.user
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .withdrawals(args);
   }
 }

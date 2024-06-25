@@ -26,12 +26,18 @@ import { User } from "./User";
 import { UserFindManyArgs } from "./UserFindManyArgs";
 import { UserWhereUniqueInput } from "./UserWhereUniqueInput";
 import { UserUpdateInput } from "./UserUpdateInput";
+import { DepositFindManyArgs } from "../../deposit/base/DepositFindManyArgs";
+import { Deposit } from "../../deposit/base/Deposit";
+import { DepositWhereUniqueInput } from "../../deposit/base/DepositWhereUniqueInput";
 import { PaymentFindManyArgs } from "../../payment/base/PaymentFindManyArgs";
 import { Payment } from "../../payment/base/Payment";
 import { PaymentWhereUniqueInput } from "../../payment/base/PaymentWhereUniqueInput";
 import { ReferralFindManyArgs } from "../../referral/base/ReferralFindManyArgs";
 import { Referral } from "../../referral/base/Referral";
 import { ReferralWhereUniqueInput } from "../../referral/base/ReferralWhereUniqueInput";
+import { WithdrawalFindManyArgs } from "../../withdrawal/base/WithdrawalFindManyArgs";
+import { Withdrawal } from "../../withdrawal/base/Withdrawal";
+import { WithdrawalWhereUniqueInput } from "../../withdrawal/base/WithdrawalWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -237,6 +243,109 @@ export class UserControllerBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id/deposits")
+  @ApiNestedQuery(DepositFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "Deposit",
+    action: "read",
+    possession: "any",
+  })
+  async findDeposits(
+    @common.Req() request: Request,
+    @common.Param() params: UserWhereUniqueInput
+  ): Promise<Deposit[]> {
+    const query = plainToClass(DepositFindManyArgs, request.query);
+    const results = await this.service.findDeposits(params.id, {
+      ...query,
+      select: {
+        amount: true,
+        createdAt: true,
+        date: true,
+        id: true,
+        updatedAt: true,
+
+        user: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/deposits")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async connectDeposits(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: DepositWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      deposits: {
+        connect: body,
+      },
+    };
+    await this.service.updateUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/deposits")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async updateDeposits(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: DepositWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      deposits: {
+        set: body,
+      },
+    };
+    await this.service.updateUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/deposits")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async disconnectDeposits(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: DepositWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      deposits: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @common.Get("/:id/payments")
   @ApiNestedQuery(PaymentFindManyArgs)
   @nestAccessControl.UseRoles({
@@ -438,6 +547,109 @@ export class UserControllerBase {
   ): Promise<void> {
     const data = {
       referrals: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id/withdrawals")
+  @ApiNestedQuery(WithdrawalFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "Withdrawal",
+    action: "read",
+    possession: "any",
+  })
+  async findWithdrawals(
+    @common.Req() request: Request,
+    @common.Param() params: UserWhereUniqueInput
+  ): Promise<Withdrawal[]> {
+    const query = plainToClass(WithdrawalFindManyArgs, request.query);
+    const results = await this.service.findWithdrawals(params.id, {
+      ...query,
+      select: {
+        amount: true,
+        createdAt: true,
+        date: true,
+        id: true,
+        updatedAt: true,
+
+        user: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/withdrawals")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async connectWithdrawals(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: WithdrawalWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      withdrawals: {
+        connect: body,
+      },
+    };
+    await this.service.updateUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/withdrawals")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async updateWithdrawals(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: WithdrawalWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      withdrawals: {
+        set: body,
+      },
+    };
+    await this.service.updateUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/withdrawals")
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "update",
+    possession: "any",
+  })
+  async disconnectWithdrawals(
+    @common.Param() params: UserWhereUniqueInput,
+    @common.Body() body: WithdrawalWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      withdrawals: {
         disconnect: body,
       },
     };

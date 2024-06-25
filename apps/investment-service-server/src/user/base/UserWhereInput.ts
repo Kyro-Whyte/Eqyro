@@ -11,15 +11,29 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { DepositListRelationFilter } from "../../deposit/base/DepositListRelationFilter";
+import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { IsOptional, ValidateNested } from "class-validator";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { StringFilter } from "../../util/StringFilter";
 import { PaymentListRelationFilter } from "../../payment/base/PaymentListRelationFilter";
 import { ReferralListRelationFilter } from "../../referral/base/ReferralListRelationFilter";
+import { WithdrawalListRelationFilter } from "../../withdrawal/base/WithdrawalListRelationFilter";
 
 @InputType()
 class UserWhereInput {
+  @ApiProperty({
+    required: false,
+    type: () => DepositListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => DepositListRelationFilter)
+  @IsOptional()
+  @Field(() => DepositListRelationFilter, {
+    nullable: true,
+  })
+  deposits?: DepositListRelationFilter;
+
   @ApiProperty({
     required: false,
     type: StringNullableFilter,
@@ -153,6 +167,18 @@ class UserWhereInput {
     nullable: true,
   })
   usernameUser?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => WithdrawalListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => WithdrawalListRelationFilter)
+  @IsOptional()
+  @Field(() => WithdrawalListRelationFilter, {
+    nullable: true,
+  })
+  withdrawals?: WithdrawalListRelationFilter;
 }
 
 export { UserWhereInput as UserWhereInput };

@@ -26,10 +26,14 @@ import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
 import { CreateUserArgs } from "./CreateUserArgs";
 import { UpdateUserArgs } from "./UpdateUserArgs";
 import { DeleteUserArgs } from "./DeleteUserArgs";
+import { DepositFindManyArgs } from "../../deposit/base/DepositFindManyArgs";
+import { Deposit } from "../../deposit/base/Deposit";
 import { PaymentFindManyArgs } from "../../payment/base/PaymentFindManyArgs";
 import { Payment } from "../../payment/base/Payment";
 import { ReferralFindManyArgs } from "../../referral/base/ReferralFindManyArgs";
 import { Referral } from "../../referral/base/Referral";
+import { WithdrawalFindManyArgs } from "../../withdrawal/base/WithdrawalFindManyArgs";
+import { Withdrawal } from "../../withdrawal/base/Withdrawal";
 import { UserService } from "../user.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => User)
@@ -137,6 +141,26 @@ export class UserResolverBase {
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [Deposit], { name: "deposits" })
+  @nestAccessControl.UseRoles({
+    resource: "Deposit",
+    action: "read",
+    possession: "any",
+  })
+  async findDeposits(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: DepositFindManyArgs
+  ): Promise<Deposit[]> {
+    const results = await this.service.findDeposits(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.ResolveField(() => [Payment], { name: "payments" })
   @nestAccessControl.UseRoles({
     resource: "Payment",
@@ -168,6 +192,26 @@ export class UserResolverBase {
     @graphql.Args() args: ReferralFindManyArgs
   ): Promise<Referral[]> {
     const results = await this.service.findReferrals(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => [Withdrawal], { name: "withdrawals" })
+  @nestAccessControl.UseRoles({
+    resource: "Withdrawal",
+    action: "read",
+    possession: "any",
+  })
+  async findWithdrawals(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: WithdrawalFindManyArgs
+  ): Promise<Withdrawal[]> {
+    const results = await this.service.findWithdrawals(parent.id, args);
 
     if (!results) {
       return [];

@@ -13,17 +13,19 @@ import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsDate,
-  IsString,
-  IsOptional,
-  MaxLength,
   ValidateNested,
+  IsOptional,
+  IsString,
+  MaxLength,
 } from "class-validator";
 import { Type } from "class-transformer";
+import { Deposit } from "../../deposit/base/Deposit";
 import { Payment } from "../../payment/base/Payment";
 import { Referral } from "../../referral/base/Referral";
 import { IsJSONValue } from "../../validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { JsonValue } from "type-fest";
+import { Withdrawal } from "../../withdrawal/base/Withdrawal";
 
 @ObjectType()
 class User {
@@ -34,6 +36,15 @@ class User {
   @Type(() => Date)
   @Field(() => Date)
   createdAt!: Date;
+
+  @ApiProperty({
+    required: false,
+    type: () => [Deposit],
+  })
+  @ValidateNested()
+  @Type(() => Deposit)
+  @IsOptional()
+  deposits?: Array<Deposit>;
 
   @ApiProperty({
     required: false,
@@ -177,6 +188,15 @@ class User {
     nullable: true,
   })
   usernameUser!: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => [Withdrawal],
+  })
+  @ValidateNested()
+  @Type(() => Withdrawal)
+  @IsOptional()
+  withdrawals?: Array<Withdrawal>;
 }
 
 export { User as User };

@@ -11,21 +11,35 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
+import { DepositCreateNestedManyWithoutUsersInput } from "./DepositCreateNestedManyWithoutUsersInput";
 import {
-  IsString,
-  IsOptional,
-  MaxLength,
   ValidateNested,
+  IsOptional,
+  IsString,
+  MaxLength,
 } from "class-validator";
-import { PaymentCreateNestedManyWithoutUsersInput } from "./PaymentCreateNestedManyWithoutUsersInput";
 import { Type } from "class-transformer";
+import { PaymentCreateNestedManyWithoutUsersInput } from "./PaymentCreateNestedManyWithoutUsersInput";
 import { ReferralCreateNestedManyWithoutUsersInput } from "./ReferralCreateNestedManyWithoutUsersInput";
 import { IsJSONValue } from "../../validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
+import { WithdrawalCreateNestedManyWithoutUsersInput } from "./WithdrawalCreateNestedManyWithoutUsersInput";
 
 @InputType()
 class UserCreateInput {
+  @ApiProperty({
+    required: false,
+    type: () => DepositCreateNestedManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => DepositCreateNestedManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => DepositCreateNestedManyWithoutUsersInput, {
+    nullable: true,
+  })
+  deposits?: DepositCreateNestedManyWithoutUsersInput;
+
   @ApiProperty({
     required: false,
     type: String,
@@ -166,6 +180,18 @@ class UserCreateInput {
     nullable: true,
   })
   usernameUser?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => WithdrawalCreateNestedManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => WithdrawalCreateNestedManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => WithdrawalCreateNestedManyWithoutUsersInput, {
+    nullable: true,
+  })
+  withdrawals?: WithdrawalCreateNestedManyWithoutUsersInput;
 }
 
 export { UserCreateInput as UserCreateInput };

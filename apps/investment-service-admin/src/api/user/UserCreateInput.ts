@@ -1,8 +1,11 @@
+import { DepositCreateNestedManyWithoutUsersInput } from "./DepositCreateNestedManyWithoutUsersInput";
 import { PaymentCreateNestedManyWithoutUsersInput } from "./PaymentCreateNestedManyWithoutUsersInput";
 import { ReferralCreateNestedManyWithoutUsersInput } from "./ReferralCreateNestedManyWithoutUsersInput";
 import { InputJsonValue } from "../../types";
+import { WithdrawalCreateNestedManyWithoutUsersInput } from "./WithdrawalCreateNestedManyWithoutUsersInput";
 
 export type UserCreateInput = {
+  deposits?: DepositCreateNestedManyWithoutUsersInput;
   email?: string | null;
   emailUser?: string | null;
   firstName?: string | null;
@@ -16,4 +19,5 @@ export type UserCreateInput = {
   roles: InputJsonValue;
   username: string;
   usernameUser?: string | null;
+  withdrawals?: WithdrawalCreateNestedManyWithoutUsersInput;
 };
